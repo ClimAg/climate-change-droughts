@@ -11,7 +11,7 @@ data <- read_excel("data/nasa1.xlsx")
 
 # view first few rows of data
 head(data)
-# # A tibble: 6 × 14                                                            
+# # A tibble: 6 × 14
 #   PARAMETER  YEAR   JAN   FEB   MAR   APR   MAY   JUN   JUL   AUG   SEP   OCT
 #   <chr>     <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
 # 1 T2M_MAX    1981  11.0  11.6  14.6  15.6  18.1  21.5  21.9  21.5  21.3  15.1
