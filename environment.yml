@@ -1,0 +1,9 @@
+name: ClimAgR
+channels:
+  - conda-forge
+  - r
+  - anaconda
+dependencies:
+  - jupyterlab
+  - r-base
+  - r-essentials
