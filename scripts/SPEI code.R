@@ -19,26 +19,26 @@ head(df)
 # 5   T2M_MAX 1985 10.38 11.32 11.59 14.27 17.24 18.51 20.72 18.76 19.86 17.39 12.90 13.41 20.72
 # 6   T2M_MAX 1986 11.29  5.40 11.69 12.90 17.40 22.70 23.00 19.22 17.73 17.55 13.11 13.08 23.00
 
-# convert to data table df
+# convert to data table
 df <- as.data.table(df)
 
-#create a new data frame "df1" from "df"
+#create a new data frame
   #extract only precipitation data "PRECTOTCORR" between YEAR et DEC
 df1<-subset(df, PARAMETER== "PRECTOTCORR", select=c(YEAR:DEC))
 
-# stack columns to create a time series
+  # stack columns to create a time series
 df1<-melt(df1, id.vars=c("YEAR"), variable.name="MONTH")
 
-#sort by years, then by months
+  #sort by years, then by months
 df1<-df1[order(df1$YEAR),]
 
 #reset row names
 row.names(df1)<-NULL
 
-#name the third column"PRCP"
+  #name the third column"PRCP"
 colnames(df1)[3]<-"PRCP"
 
-# view first 5 rows of data in proper format
+  # view first 5 rows of data in proper format
 head(df1)
 # YEAR MONTH PRCP
 # 1: 1981   JAN 1.37
@@ -52,7 +52,7 @@ head(df1)
 df2<-subset(df, PARAMETER== "T2M_MAX", select=c(YEAR:DEC))
 df2<-melt(df2, id.var="YEAR", variable.name="MONTH")
 df2<-df2[order(df2$YEAR),]
-colnames(df2)[3]<-"Tmax"
+colnames(df2)[3]<-"TMAX"
 df2<-subset(df2, select = c(-YEAR, -MONTH))
 
 #view the 6 first rows
@@ -69,7 +69,7 @@ head(df2)
 df3<-subset(df, PARAMETER== "T2M_MIN", select=c(YEAR:DEC))
 df3<-melt(df3, id.var="YEAR", variable.name="MONTH")
 df3<-df3[order(df3$YEAR),]
-colnames(df3)[3]<-"Tmin"
+colnames(df3)[3]<-"TMIN"
 df3<-subset(df3, select = c(-YEAR, -MONTH))
 
 #view the 6 first rows
@@ -99,7 +99,7 @@ install.packages ("SPEI")
 library(SPEI)
 
 #PET calculation
-df1$PET<-hargreaves(Tmin=df1$Tmin,Tmax=df1$Tmax, lat=52.164)
+df1$PET<-hargreaves(Tmin=df1$TMIN,Tmax=df1$TMAX, lat=52.164)
 
 #water balance calculation
 WBal<-df1$PRCP-df1$PET
@@ -112,3 +112,4 @@ spei6
 
 #create a graphic
 plot.spei(spei6)
+

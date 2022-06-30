@@ -19,23 +19,23 @@ head(df)
 # 5   T2M_MAX 1985 10.38 11.32 11.59 14.27 17.24 18.51 20.72 18.76 19.86 17.39 12.90 13.41 20.72
 # 6   T2M_MAX 1986 11.29  5.40 11.69 12.90 17.40 22.70 23.00 19.22 17.73 17.55 13.11 13.08 23.00
 
-# convert to data table df
+# convert to data table
 df <- as.data.table(df)
 
-#create a new data frame "df1" from "df"
+#create a new data frame :
   #extract only precipitation data "PRECTOTCORR" between YEAR et DEC
 df1<-subset(df, PARAMETER== "PRECTOTCORR", select=c(YEAR:DEC))
 
-# stack columns to create a time series
+  # stack columns to create a time series
 df1<-melt(df1, id.vars=c("YEAR"), variable.name="MONTH")
 
-#sort by years, then by months
+  #sort by years, then by months
 df1<-df1[order(df1$YEAR),]
 
-#reset row names
+  #reset row names
 row.names(df1)<-NULL
 
-#name the third column"PRCP"
+  #name the third column"PRCP"
 colnames(df1)[3]<-"PRCP"
 
 # view first 5 rows of data in proper format
@@ -56,8 +56,35 @@ library(SPEI)
 #create a list
 spi6<-spi(df1$PRCP,6)
 
-#display the values
-spi6
+# #display the values
+# spi6
+# str(spi6)
+# class(spi6)
+#
+#
+# #convert list into data frame
+# as.data.table(spi6$fitted)
+# str(spi6$fitted)
+#
+# #create a graphic
+# group<-rbinom(1000,1,0.3)+1
 
-#create a graphic
+
+
+
+
+spi6ts <- as.data.table(spi6$fitted)
+df1$SPI6 <- spi6ts
+
+
+
 plot(spi6)
+rbindlist(spi6)
+#      $fitted,
+#      main="Past Data (1981-2010) SPI6",)
+# legend("topright",                              # Add legend to plot
+#        legend = c("Moderetaly dry", "Very dry", "Extremely dry"),
+#        col = 1:2,
+#        pch = 1:2)
+colnames(spi$fitted)[1]<-df1$YEAR
+
