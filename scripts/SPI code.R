@@ -7,7 +7,7 @@ install.packages("data.table")
 library(data.table)
 
 #import data in data
-df <- read.table("./data/nasatea.csv", quote = "\"", sep=";", header=T, dec=".")
+df <- read.table("./data/nasa(81-10).csv", quote = "\"", sep=";", header=T, dec=".")
 
 # view first 6 rows of data
 head(df)
@@ -57,34 +57,62 @@ library(SPEI)
 spi6<-spi(df1$PRCP,6)
 
 # #display the values
-# spi6
-# str(spi6)
-# class(spi6)
-#
-#
-# #convert list into data frame
-# as.data.table(spi6$fitted)
-# str(spi6$fitted)
-#
-# #create a graphic
-# group<-rbinom(1000,1,0.3)+1
+spi6
 
-
-
-
-
+# create a time series from the SPI data
 spi6ts <- as.data.table(spi6$fitted)
+
+# merge the time series with the main data table
 df1$SPI6 <- spi6ts
 
+# create a date column using the year and month
+df1$DATE <- paste(as.character(df1$YEAR), as.character(df1$MONTH), as.character(01))
+
+# set locale to English
+Sys.setlocale("LC_TIME", "English")
+
+# convert to datetime format
+df1$DATE <- as.Date(df1$DATE, format = "%Y %b %d")
+
+###create a graphic###
+# Make the window wider than taller
+windows(width = 3.5, height = 3)
+
+# Save current graphical parameters
+opar <- par(no.readonly = TRUE)
+
+# Change the margins of the plot (the fourth is the right margin)
+par(mar = c(5, 5, 4, 8))
+
+#create a graphic
+plot(df1$DATE, df1$SPI6, type = "l", xlab = "Year", ylab = "SPI",main="Past Data (1981-2010) SPI6")
+lines(df1$DATE, rep(-1, times = length(df1$YEAR)), col = "yellow")
+lines(df1$DATE, rep(-1.5, times = length(df1$YEAR)), col = "orange")
+lines(df1$DATE, rep(-2, times = length(df1$YEAR)), col = "red")
+
+legend("topright",
+       inset = c(-0.45, 0), # You will need to fine-tune the first
+       # value depending on the windows size
+       legend = c("Moderately dry", "Very dry", "Extremely dry"),
+       col = c("yellow", "orange", "red"),
+       lty = c(1, 1, 1),
+       bg=rgb(1,0,0, alpha=0.15),
+       cex=0.7,
+       xpd = TRUE) # You need to specify this graphical parameter to
+                  # put the legend outside the plot
+# Back to the default graphical parameters
+on.exit(par(opar))
 
 
-plot(spi6)
-rbindlist(spi6)
-#      $fitted,
-#      main="Past Data (1981-2010) SPI6",)
-# legend("topright",                              # Add legend to plot
-#        legend = c("Moderetaly dry", "Very dry", "Extremely dry"),
-#        col = 1:2,
-#        pch = 1:2)
-colnames(spi$fitted)[1]<-df1$YEAR
+
+
+
+
+
+
+
+
+
+
+
 
