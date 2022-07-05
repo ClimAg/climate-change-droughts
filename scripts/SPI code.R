@@ -1,5 +1,8 @@
 #SPI code#
 
+#import functions
+source("functions/convert-units.R")
+
 # install packages
 install.packages("data.table")
 
@@ -47,6 +50,9 @@ head(df1)
 # 4: 1981   APR 1.11
 # 5: 1981   MAY 5.35
 # 6: 1981   JUN 2.41
+
+#if needed : convert kgm2s in mmday
+#kgm2s(df1$PRCP)
 
 #install package
 install.packages ("SPEI")

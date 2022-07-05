@@ -48,6 +48,9 @@ head(df1)
 # 5: 1981   MAY 5.35
 # 6: 1981   JUN 2.41
 
+#if needed : convert kgm2s to mmday :
+#kgm2s (df1$PRCP)
+
 #create maximal temperature vector
 df2<-subset(df, PARAMETER== "T2M_MAX", select=c(YEAR:DEC))
 df2<-melt(df2, id.var="YEAR", variable.name="MONTH")
@@ -65,6 +68,9 @@ head(df2)
 # 5: 18.08
 # 6: 21.53
 
+#if needed : convert K to °C :
+#kelvin_to_celsuis(df2$TMAX)
+
 #create minimal temperature vector
 df3<-subset(df, PARAMETER== "T2M_MIN", select=c(YEAR:DEC))
 df3<-melt(df3, id.var="YEAR", variable.name="MONTH")
@@ -81,6 +87,9 @@ head(df3)
 # 4:  0.71
 # 5:  2.47
 # 6:  6.72
+
+#if needed : convert K to °C :
+#kelvin_to_celsuis(df3$TMIN)
 
 # combine vectors to data frame
 df1<-cbind(df1,df2,df3)
