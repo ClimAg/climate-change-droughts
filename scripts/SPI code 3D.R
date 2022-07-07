@@ -1,13 +1,7 @@
-#Plotting matrices using the "lattice" R package
+#SPI code 3D#
 
-# import required libraries
-library("lattice")
-library("colorspace")
-
-#SPI code#
-
-#import functions
-source("functions/convert-units.R")
+# #import functions
+# source("functions/convert-units.R")
 
 # install packages
 install.packages("data.table")
@@ -77,27 +71,41 @@ spi6ts <- as.data.table(spi6$fitted)
 # merge the time series with the main data table
 df1$SPI6 <- spi6ts
 df1[,3]<-NULL
+dfnew<-subset(df1, select=c(-PRCP))
 head(df1)
+# YEAR MONTH      SPI6
+# 1: 1981   JAN        NA
+# 2: 1981   FEB        NA
+# 3: 1981   MAR        NA
+# 4: 1981   APR        NA
+# 5: 1981   MAY        NA
+# 6: 1981   JUN 0.8447237
 
 #reshapedata
-df2<-dcast(df1,
+dfnew<-dcast(df1,
       YEAR~MONTH,
       value.var=c("SPI6"))
-head(df2)
+head(dfnew)
 
 #reset row names
-df2<-data.frame(df2)
-row.names(df2)<-df2$YEAR
-df2[,1]<-NULL
-df2
+dfnew<-data.frame(dfnew)
+row.names(dfnew)<-dfnew$YEAR
+dfnew[,1]<-NULL
+str(dfnew)
 
-##create a graphic 3D
+###create a 3D graphic###
+
+#Plotting matrices using the "lattice" R package
+
+# import required libraries
+library("lattice")
+library("colorspace")
 
 # set plot resolution
 options(repr.plot.res = 200)
 
-# generate 5 by 5 matrix, with values between 0 and 100
-m1 <- as.matrix(df2)
+# generate a matrix from the data
+m1 <- as.matrix(dfnew)
 
 # view the matrix
 m1
@@ -111,5 +119,3 @@ levelplot(
   ylab = "Month",
   main="Past data (1981-2010) SPI6 "
 )
-
-library(colorspace)

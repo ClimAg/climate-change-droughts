@@ -1,4 +1,7 @@
-#SPEI code#
+####SPEI code###
+
+# #import functions
+# source("functions/convert-units.R")
 
 # install packages
 install.packages("data.table")

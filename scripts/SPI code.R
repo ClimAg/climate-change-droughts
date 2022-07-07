@@ -1,7 +1,7 @@
-#SPI code#
+####SPI code###
 
-#import functions
-source("functions/convert-units.R")
+# #import functions
+# source("functions/convert-units.R")
 
 # install packages
 install.packages("data.table")
@@ -108,17 +108,3 @@ legend("topright",
                   # put the legend outside the plot
 # Back to the default graphical parameters
 on.exit(par(opar))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
