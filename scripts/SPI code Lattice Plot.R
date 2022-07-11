@@ -3,11 +3,10 @@
 # #import functions
 # source("functions/convert-units.R")
 
-# install packages
-install.packages("data.table")
-
 # load libraries
 library(data.table)
+library(lattice)
+library(SPEI)
 
 #import data in data
 df <- read.table("./data/nasa(81-10).csv", quote = "\"", sep=";", header=T, dec=".")
@@ -54,10 +53,6 @@ head(df1)
 #if needed : convert kgm2s in mmday
 #kgm2s(df1$PRCP)
 
-#install package
-install.packages ("SPEI")
-#load package
-library(SPEI)
 
 #create a list
 spi6<-spi(df1$PRCP,6)
@@ -90,15 +85,12 @@ head(dfnew)
 dfnew<-data.frame(dfnew)
 row.names(dfnew)<-dfnew$YEAR
 dfnew[,1]<-NULL
-str(dfnew)
 
-###create a 3D graphic###
+###create a Lattice Plot###
 
 #Plotting matrices using the "lattice" R package
 
 # import required libraries
-library(lattice)
-library(colorspace)
 
 # set plot resolution
 options(repr.plot.res = 200)
@@ -109,27 +101,23 @@ m1 <- as.matrix(dfnew)
 # view the matrix
 m1
 
-# #create a theme
-# library(latticeExtra)
-# library(RColorBrewer)
-#
-# myth<-lattice.options(default.theme = standard.theme(color = FALSE))
-# sb <- trellis.par.get("strip.background")
-# sb[["col"]][1] <- "lightred"
-# myth2<-trellis.par.set("strip.background", sb)
-# #
-# # myTheme <- modifyList(custom.theme(region=brewer.pal(8, 'RdBu')),
-# #                       list(
-# #                         strip.background=list(col='blue'),
-# #                         panel.background=list(col='red')))
+#create spi color palette
+palette_spi <- palette(c("red", "orange", "yellow", "white", "#D2B4DE", "#8E44AD", "#4A235A"))
 
+#create a theme
+myTheme <- modifyList(custom.theme(region=palette_spi),
+                      list(
+                        panel.background=list(col="black")))
+
+#break color key
+breaks <- c(-3, -2, -1.5, -1, 1, 1.5, 2, 3)
 
 # plot the matrix
 levelplot(
-  m1, par.settings=myth2,
-  # col.regions = divergingx_hcl("PRGn", n = 12),
-  col.regions=heat.colors(100),
-  cuts = 7,
+  m1,
+  par.settings=myTheme,
+  col.regions = palette_spi,
+  at = breaks,
   xlab = "Year",
   ylab = "Month",
   main="Past data (1981-2010) SPI6 "

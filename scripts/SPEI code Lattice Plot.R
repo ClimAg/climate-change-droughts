@@ -3,11 +3,10 @@
 # #import functions
 # source("functions/convert-units.R")
 
-# install packages
-install.packages("data.table")
-
 # load libraries
 library(data.table)
+library(lattice)
+library(SPEI)
 
 #import data in data
 df <- read.table("./data/nasa(81-10).csv", quote = "\"", sep=";", header=T, dec=".")
@@ -105,11 +104,6 @@ head(df1)
 # 5: 1981   MAY 5.35 18.08  2.47
 # 6: 1981   JUN 2.41 21.53  6.72
 
-#install package
-install.packages ("SPEI")
-#load package
-library(SPEI)
-
 #PET calculation
 df1$PET<-hargreaves(Tmin=df1$TMIN,Tmax=df1$TMAX, lat=52.164)
 
@@ -149,13 +143,11 @@ row.names(dfnew)<-dfnew$YEAR
 dfnew[,1]<-NULL
 dfnew
 
-###create a 3D graphic###
+###create a Lattice Plot###
 
 #Plotting matrices using the "lattice" R package
 
 # import required libraries
-library("lattice")
-library("colorspace")
 
 # set plot resolution
 options(repr.plot.res = 200)
@@ -166,12 +158,24 @@ m1 <- as.matrix(dfnew)
 # view the matrix
 m1
 
+#create spi color palette
+palette_spi <- palette(c("red", "orange", "yellow", "white", "#D2B4DE", "#8E44AD", "#4A235A"))
+
+#create a theme
+myTheme <- modifyList(custom.theme(region=palette_spi),
+                      list(
+                        panel.background=list(col="black")))
+
+#break color key
+breaks <- c(-3, -2, -1.5, -1, 1, 1.5, 2, 3)
+
 # plot the matrix
 levelplot(
   m1,
-  col.regions = divergingx_hcl("PRGn", n = 12),
-  cuts = 7,
+  par.settings=myTheme,
+  col.regions = palette_spi,
+  at = breaks,
   xlab = "Year",
   ylab = "Month",
-  main="Past data (1981-2010) SPIE6 "
+  main="Past data (1981-2010) SPEI6 "
 )
