@@ -5,8 +5,8 @@
 
 # load libraries
 library(data.table)
-library(lattice)
 library(SPEI)
+library(lattice)
 
 #import data in data
 df <- read.table("./data/nasa(81-10).csv", quote = "\"", sep=";", header=T, dec=".")
@@ -85,6 +85,7 @@ head(dfnew)
 dfnew<-data.frame(dfnew)
 row.names(dfnew)<-dfnew$YEAR
 dfnew[,1]<-NULL
+dfnew
 
 ###create a Lattice Plot###
 

@@ -3,11 +3,9 @@
 # #import functions
 # source("functions/convert-units.R")
 
-# install packages
-install.packages("data.table")
-
 # load libraries
 library(data.table)
+library(SPEI)
 
 #import data in data
 df <- read.table("./data/nasa(81-10).csv", quote = "\"", sep=";", header=T, dec=".")
@@ -54,11 +52,6 @@ head(df1)
 #if needed : convert kgm2s in mmday
 #kgm2s(df1$PRCP)
 
-#install package
-install.packages ("SPEI")
-#load package
-library(SPEI)
-
 #create a list
 spi6<-spi(df1$PRCP,6)
 
@@ -90,7 +83,6 @@ opar <- par(no.readonly = TRUE)
 # Change the margins of the plot (the fourth is the right margin)
 par(mar = c(5, 5, 4, 8))
 
-#create a graphic
 plot(df1$DATE, df1$SPI6, type = "l", xlab = "Year", ylab = "SPI",main="Past Data (1981-2010) SPI6")
 lines(df1$DATE, rep(-1, times = length(df1$YEAR)), col = "yellow")
 lines(df1$DATE, rep(-1.5, times = length(df1$YEAR)), col = "orange")
