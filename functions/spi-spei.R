@@ -14,6 +14,7 @@ spi_process <- function(filepath, number) {
   spi_ts <- (as.data.table(spi_ts$fitted))
   colnames(spi_ts)[1] <- gsub(" ", "", paste("SPI", as.character(number)))
   spi_df <- cbind(spi_df, spi_ts[, 1])
+  rownames(spi_df) <- NULL
   return(spi_df)
 }
 
@@ -30,6 +31,7 @@ spei_process <- function(filepath, number, lat) {
   spei_ts <- (as.data.table(spei_ts$fitted))
   colnames(spei_ts)[1] <- gsub(" ", "", paste("SPEI", as.character(number)))
   spei_df <- cbind(spei_df, spei_ts[, 1])
+  rownames(spei_df) <- NULL
   return(spei_df)
 }
 
