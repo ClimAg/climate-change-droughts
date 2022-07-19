@@ -7,6 +7,7 @@
 library(data.table)
 library(SPEI)
 library(lattice)
+library(latticeExtra)
 
 #import data in data
 df <- read.table("./data/nasa(81-10).csv", quote = "\"", sep=";", header=T, dec=".")
@@ -55,16 +56,16 @@ head(df1)
 
 
 #create a list
-spi6<-spi(df1$PRCP,6)
+spi12<-spi(df1$PRCP, 12)
 
 # #display the values
-spi6
+spi12
 
 # create a time series from the SPI data
-spi6ts <- as.data.table(spi6$fitted)
+spi12ts <- as.data.table(spi12$fitted)
 
 # merge the time series with the main data table
-df1$SPI6 <- spi6ts
+df1$SPI12 <- spi12ts
 dfnew<-subset(df1, select=c(-PRCP))
 head(dfnew)
 # YEAR MONTH      SPI6
@@ -78,14 +79,13 @@ head(dfnew)
 #reshapedata
 dfnew<-dcast(df1,
       YEAR~MONTH,
-      value.var=c("SPI6"))
+      value.var=c("SPI12"))
 head(dfnew)
-
+summary(dfnew)
 #reset row names
 dfnew<-data.frame(dfnew)
 row.names(dfnew)<-dfnew$YEAR
 dfnew[,1]<-NULL
-dfnew
 
 ###create a Lattice Plot###
 
@@ -111,7 +111,7 @@ myTheme <- modifyList(custom.theme(region=palette_spi),
                         panel.background=list(col="black")))
 
 #break color key
-breaks <- c(-3, -2, -1.5, -1, 1, 1.5, 2, 3)
+breaks <- c(-4, -2, -1.5, -1, 1, 1.5, 2, 4)
 
 # plot the matrix
 levelplot(
@@ -121,5 +121,5 @@ levelplot(
   at = breaks,
   xlab = "Year",
   ylab = "Month",
-  main="Past data (1981-2010) SPI6 "
+  main="Past data (1981-2010) SPI12"
 )
