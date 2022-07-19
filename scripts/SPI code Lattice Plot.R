@@ -54,7 +54,6 @@ head(df1)
 #if needed : convert kgm2s in mmday
 #kgm2s(df1$PRCP)
 
-
 #create a list
 spi12<-spi(df1$PRCP, 12)
 
@@ -88,10 +87,6 @@ row.names(dfnew)<-dfnew$YEAR
 dfnew[,1]<-NULL
 
 ###create a Lattice Plot###
-
-#Plotting matrices using the "lattice" R package
-
-# import required libraries
 
 # set plot resolution
 options(repr.plot.res = 200)

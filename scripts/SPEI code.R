@@ -3,16 +3,14 @@
 # #import functions
 # source("functions/convert-units.R")
 
-# install packages
-install.packages("data.table")
-
 # load libraries
 library(data.table)
+library(SPEI)
 
 #import data in data
 df <- read.table("./data/nasa(81-10).csv", quote = "\"", sep=";", header=T, dec=".")
 
-# view first 5 rows of data
+# view first 6 rows of data
 head(df)
 # PARAMETER YEAR   JAN   FEB   MAR   APR   MAY   JUN   JUL   AUG   SEP   OCT   NOV   DEC   ANN
 # 1   T2M_MAX 1981 11.01 11.55 14.64 15.58 18.08 21.53 21.86 21.48 21.26 15.13 14.24 11.15 21.86
@@ -105,11 +103,6 @@ head(df1)
 # 5: 1981   MAY 5.35 18.08  2.47
 # 6: 1981   JUN 2.41 21.53  6.72
 
-#install package
-install.packages ("SPEI")
-#load package
-library(SPEI)
-
 #PET calculation
 df1$PET<-hargreaves(Tmin=df1$TMIN,Tmax=df1$TMAX, lat=52.164)
 
@@ -121,7 +114,6 @@ spei6<-spei(WBal,6)
 
 #display the values
 spei6
-str(spei6)
 
 # create a time series from the SPI data
 spie6ts <- as.data.table(spei6$fitted)

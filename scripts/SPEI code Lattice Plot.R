@@ -5,13 +5,14 @@
 
 # load libraries
 library(data.table)
-library(lattice)
 library(SPEI)
+library(lattice)
+library(latticeExtra)
 
 #import data in data
 df <- read.table("./data/nasa(81-10).csv", quote = "\"", sep=";", header=T, dec=".")
 
-# view first 5 rows of data
+# view first 6 rows of data
 head(df)
 # PARAMETER YEAR   JAN   FEB   MAR   APR   MAY   JUN   JUL   AUG   SEP   OCT   NOV   DEC   ANN
 # 1   T2M_MAX 1981 11.01 11.55 14.64 15.58 18.08 21.53 21.86 21.48 21.26 15.13 14.24 11.15 21.86
@@ -144,10 +145,6 @@ dfnew[,1]<-NULL
 dfnew
 
 ###create a Lattice Plot###
-
-#Plotting matrices using the "lattice" R package
-
-# import required libraries
 
 # set plot resolution
 options(repr.plot.res = 200)

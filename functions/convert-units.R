@@ -9,6 +9,7 @@ kelvin_to_celsuis <- function(kelvin) {
   return(celsuis)
 }
 kelvin_to_celsuis(298)
+
 #convert kgm2s to degrees mmday
 
 
