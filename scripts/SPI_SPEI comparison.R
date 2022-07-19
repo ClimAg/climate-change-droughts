@@ -1,43 +1,20 @@
 ####SPI_SPEI comparison code###
 
-# #import functions
-# source("functions/convert-units.R")
+#import functions
+source("functions/spi-spei.R")
 
 # load libraries
 library(data.table)
 library(SPEI)
 
-#import data in data
-df <- read.table("./data/corkair(81-10).csv", quote = "\"", sep=";", header=T, dec=".")
-head(df)
 
-#Extract SPI values#
+spi6data <- spi_process(filepath = "./data/corkair(81-10).csv", number = 6)
+spei6data <- spei_process(filepath = "./data/corkair(81-10).csv", number = 6, lat = 51.847)
 
-df1<-tail(subset(df, YEAR > 1980 & YEAR < 2011))
+spi12data <- spi_process(filepath = "./data/corkair(81-10).csv", number = 12)
+spei12data <- spei_process(filepath = "./data/corkair(81-10).csv", number = 12, lat = 51.847)
 
-spi6<-spi(df1$PRCP,6)
-spi6
-spi6ts<-as.data.table(spi6$fitted)
-spi6ts
-colnames(spi6ts)[1]<-"SPI6"
-spi6ts
-
-#Extract SPEI values#
-
-#PET calculation
-df1$PET<-hargreaves(Tmin=df1$TMIN,Tmax=df1$TMAX, lat=51.847)
-
-#water balance calculation
-WBal<-df1$PRCP-df1$PET
-
-#create a list
-spei6<-spei(WBal,6)
-
-#display the values
-spei6
-spei6ts <- as.data.table(spei6$fitted)
-colnames(spei6ts)[1]<-"SPEI6"
-spei6ts
+dfall <- subset(spi6data, select=c(YEAR, MONTH))
 
 #Reshape data
 
@@ -56,3 +33,7 @@ result= cor.test(as.vector(dfnew$SPI6),as.vector(dfnew$SPEI6),
          method = "pearson",
          conf.level = 0.90)
 print(result)
+
+library(stringr)
+maj<-c("spi")
+maj %>% str_to_upper()
