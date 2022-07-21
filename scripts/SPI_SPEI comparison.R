@@ -10,6 +10,7 @@ library(Hmisc)
 library(GGally)
 library(ggcorrplot)
 library(corrplot)
+library(colorspace)
 
 
 spi1data <- spi_process(filepath = "./data/corkair(81-10).csv", number = 1)
@@ -65,53 +66,59 @@ corrplot(r_value,
          type="upper",
          bg="white",
          tl.col="black",
-         tl.srt=45)
-corrplot(r_value,
-         type="lower",
-         add=T,
-         p.mat=pval,
-         insig="p-value",
-         tl.col="black",
-         tl.pos="n",
-         sig.level=0)
+         tl.srt=45,
+         # col= sequential_hcl("Viridis", n = 200),
+         col= diverging_hcl("Berlin", n = 200, rev = TRUE),
+         # col = COL2("PuOr", 200),
+         # col=c("green", "yellow"),
+         is.corr = FALSE)
+
+# corrplot(r_value,
+#          type="lower",
+#          add=T,
+#          p.mat=pval,
+#          insig="p-value",
+#          tl.col="black",
+#          tl.pos="n",
+#          sig.level=0)
+
 
 #Scatter plot
 
-x<-dfall[[3]]
-x
-dfall$SPI1
-y<-dfall$SPEI1
+#visualisation
+ggplot(dfall, aes(x = SPI1, y = SPEI12)) +
+  geom_point() +
+  stat_smooth()
 
-## Create a dataframe to resemble existing data
-mydata = data.frame(x,y)
+cor(dfall$SPI1, dfall$SPEI1, use="na.or.complete")
 
-## fit model
-fit <- lm(y~x, data = mydata)
-fit
+#computation
+model = lm ( SPI12 ~ SPEI12, data=dfall)
+model
+
+#regression line
+ggplot(dfall, aes(y=SPI12, x=SPEI12)) +
+  geom_point() +
+  stat_smooth(method = lm)
+
+#check the quality of a linear regression model
+summary(model)
+
+
+confint(model)
+
 
 ## Calculate RMSE and other values
-rmse <- round(sqrt(mean(resid(fit)^2)), 2)
-coefs <- coef(fit)
+rmse <- round(sqrt(mean(resid(model)^2)), 2)
+coefs <- coef(model)
 b0 <- round(coefs[1], 2)
 b1 <- round(coefs[2],2)
-r2 <- round(summary(fit)$r.squared, 2)
+r2 <- round(summary(model)$r.squared, 2)
 
 eqn <- bquote(italic(y) == .(b0) + .(b1)*italic(x) * "," ~~
                 r^2 == .(r2) * "," ~~ RMSE == .(rmse))
 
 ## Plot the data
-plot(y ~ x, data = mydata)
-abline(fit)
-text(2, 10, eqn, pos = 4)
-
-
-#Heatmap
-# ggcorr(r_value,
-#        nbreaks = 6, digits = 2,
-#        low = "#3B9AB2",mid = "#EEEEEE", high = "#F21A00",
-#        geom = "tile",
-#        label = TRUE,
-#        label_size = 3,
-#        color = "grey50")
-
-
+plot( SPI12 ~ SPEI12, data=dfall)
+abline(model)
+text(-1, 1, eqn, pos = 4)
