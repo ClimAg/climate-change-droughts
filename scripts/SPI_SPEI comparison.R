@@ -120,18 +120,10 @@ Sys.setlocale("LC_TIME", "English")
 dfall$DATE <- as.Date(dfall$DATE, format = "%Y %b %d")
 
 ###create a graphic###
-# Make the window wider than taller
-#windows(width = 4.5, height = 3)
 
 plot.new()
 
-# Save current graphical parameters
-# opar <- par(no.readonly = TRUE)
-
-# # Change the margins of the plot (the fourth is the right margin)
-#par(mar = c(5, 5, 4, 10))
-
-plot(dfall$DATE, dfall$SPI12, type = "l", xlab = "Year", ylab = "SPI/SPEI",main="Past Data (1981-2010) SPI-12 (green) and SPEI-12 (black) comparison", col="seagreen3")
+plot(dfall$DATE, dfall$SPI12, type = "l", xlab = "Year", ylab = "Index values",main="Past Data (1981-2010) SPI-12 (green) and SPEI-12 (black)", col="seagreen3")
 par(new=TRUE)
 lines(dfall$DATE, dfall$SPEI12)
 lines(dfall$DATE, rep(-1, times = length(dfall$YEAR)), col = "yellow", lwd=2)
@@ -146,8 +138,4 @@ legend("topleft",
        col = c("yellow", "orange", "red"),
        lty = c(1, 1, 1),
        bg=rgb(1,0,0, alpha=0.15),
-       cex=0.7,
-       #xpd = TRUE
-       )
-
-# on.exit(par(opar))
+       cex=0.7)
