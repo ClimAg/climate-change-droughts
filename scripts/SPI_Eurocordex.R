@@ -11,7 +11,7 @@ library(latticeExtra)
 ##using the Eurocordex script (hist_data and rcp85_data)
 
 #create a list
-spi12<-spi(hist_data$pr, 1)
+spi12<-spi(rcp85_data$pr, 12)
 
 # #display the values
 spi12
@@ -20,16 +20,16 @@ spi12
 spi12ts <- as.data.table(spi12$fitted)
 
 # merge the time series with the main data table
-hist_data1<-hist_data
+rcp85_data1<-rcp85_data
 # # Convert numeric to month names
 # my_months_name <- month.name[hist_data1$month]
 # hist_data1$month<- my_months_name
 
 #add the spi values
-hist_data1$spi<- spi12ts
+rcp85_data1$spi<- spi12ts
 
 #create a data frame with 3 columns (year, month, spi values)
-dfnew<-subset(hist_data1, select=c(month:spi))
+dfnew<-subset(rcp85_data1, select=c(month:spi))
 head(dfnew)
 # month year spi
 # 1:  January 1976  NA
@@ -41,12 +41,12 @@ head(dfnew)
 
 
 #reshapedata
-dfnew<-dcast(hist_data1,
+dfnew<-dcast(rcp85_data1,
              year~month,
              value.var=c("spi"))
 head(dfnew)
 
-colnames(dfnew) <- c("year", month.name[hist_data1$month][1:12])
+colnames(dfnew) <- c("year", month.name[rcp85_data1$month][1:12])
 
 #reset row names
 dfnew<-data.frame(dfnew)
@@ -84,5 +84,6 @@ levelplot(
   # xlab ="Year",
   xlab=list(label = "Year", cex=1.5),
   ylab=list(label="Month", cex=1.5),
-  main=list(label="Past data (1976-2005) SPI1",cex=2)
+  main=list(label="Future data (2041-2070) SPI12",cex=2)
 )
+
