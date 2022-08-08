@@ -4,7 +4,6 @@ draft/
 *.csv
 *.xlsx
 *.docx
-*.Rproj
 
 # History files
 .Rhistory
