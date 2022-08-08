@@ -40,7 +40,7 @@ pr_hist<-rbind(pr1, pr2, pr3, pr4)
 ##tasmax
 
 ##extract the past precipitation data as the proper format
-tx1<-ec_process1(datapath = "./data/eurocordex/pastdata/tasmax_EUR-11_NCC-NorESM1-M_historical_r1i1p1_DMI-HIRHAM5_v3_mon_197101-198012.nc", indexcell = 69225, var="tasmax")
+tx1<-ec_process(datapath = "./data/eurocordex/pastdata/tasmax_EUR-11_NCC-NorESM1-M_historical_r1i1p1_DMI-HIRHAM5_v3_mon_197101-198012.nc", indexcell = 69225, var="tasmax")
 tx2<-ec_process(datapath = "./data/eurocordex/pastdata/tasmax_EUR-11_NCC-NorESM1-M_historical_r1i1p1_DMI-HIRHAM5_v3_mon_198101-199012.nc", indexcell = 69225, var="tasmax")
 tx3<-ec_process(datapath = "./data/eurocordex/pastdata/tasmax_EUR-11_NCC-NorESM1-M_historical_r1i1p1_DMI-HIRHAM5_v3_mon_199101-200012.nc", indexcell = 69225, var="tasmax")
 tx4<-ec_process(datapath = "./data/eurocordex/pastdata/tasmax_EUR-11_NCC-NorESM1-M_historical_r1i1p1_DMI-HIRHAM5_v3_mon_200101-200512.nc", indexcell = 69225, var="tasmax")
