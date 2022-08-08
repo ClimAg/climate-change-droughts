@@ -3,11 +3,9 @@
 # #import functions
 # source("functions/convert-units.R")
 
-# install packages
-install.packages("data.table")
-
 # load libraries
 library(data.table)
+library(SPEI)
 
 #import data in data
 df <- read.table("./data/nasa(81-10).csv", quote = "\"", sep=";", header=T, dec=".")
@@ -54,11 +52,6 @@ head(df1)
 #if needed : convert kgm2s in mmday
 #kgm2s(df1$PRCP)
 
-#install package
-install.packages ("SPEI")
-#load package
-library(SPEI)
-
 #create a list
 spi6<-spi(df1$PRCP,6)
 
@@ -81,30 +74,34 @@ Sys.setlocale("LC_TIME", "English")
 df1$DATE <- as.Date(df1$DATE, format = "%Y %b %d")
 
 ###create a graphic###
-# Make the window wider than taller
-windows(width = 3.5, height = 3)
+# # Make the window wider than taller
+# windows(width = 3.5, height = 3)
 
 # Save current graphical parameters
-opar <- par(no.readonly = TRUE)
+#opar <- par(no.readonly = TRUE)
 
-# Change the margins of the plot (the fourth is the right margin)
-par(mar = c(5, 5, 4, 8))
+# # Change the margins of the plot (the fourth is the right margin)
+# par(mar = c(5, 5, 4, 8))
 
-#create a graphic
+###create a graphic###
+
+plot.new()
+
 plot(df1$DATE, df1$SPI6, type = "l", xlab = "Year", ylab = "SPI",main="Past Data (1981-2010) SPI6")
 lines(df1$DATE, rep(-1, times = length(df1$YEAR)), col = "yellow")
 lines(df1$DATE, rep(-1.5, times = length(df1$YEAR)), col = "orange")
 lines(df1$DATE, rep(-2, times = length(df1$YEAR)), col = "red")
 
-legend("topright",
-       inset = c(-0.45, 0), # You will need to fine-tune the first
+legend("topleft",
+       #inset = c(-0.45, 0), # You will need to fine-tune the first
        # value depending on the windows size
        legend = c("Moderately dry", "Very dry", "Extremely dry"),
        col = c("yellow", "orange", "red"),
        lty = c(1, 1, 1),
        bg=rgb(1,0,0, alpha=0.15),
-       cex=0.7,
-       xpd = TRUE) # You need to specify this graphical parameter to
+       cex=0.7
+       # xpd = TRUE
+       ) # You need to specify this graphical parameter to
                   # put the legend outside the plot
 # Back to the default graphical parameters
-on.exit(par(opar))
+#on.exit(par(opar))

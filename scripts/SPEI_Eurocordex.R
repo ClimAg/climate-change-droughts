@@ -1,4 +1,4 @@
-####SPEI code###
+####SPEI code Lattice Plot###
 
 # #import functions
 # source("functions/convert-units.R")
@@ -6,6 +6,8 @@
 # load libraries
 library(data.table)
 library(SPEI)
+library(lattice)
+library(latticeExtra)
 
 #import data in data
 df <- read.table("./data/nasa(81-10).csv", quote = "\"", sep=";", header=T, dec=".")
@@ -23,23 +25,23 @@ head(df)
 # convert to data table
 df <- as.data.table(df)
 
-#create a new data frame
-  #extract only precipitation data "PRECTOTCORR" between YEAR et DEC
+###create a new data frame###
+#extract only precipitation data "PRECTOTCORR" between YEAR et DEC
 df1<-subset(df, PARAMETER== "PRECTOTCORR", select=c(YEAR:DEC))
 
-  # stack columns to create a time series
+# stack columns to create a time series
 df1<-melt(df1, id.vars=c("YEAR"), variable.name="MONTH")
 
-  #sort by years, then by months
+#sort by years, then by months
 df1<-df1[order(df1$YEAR),]
 
 #reset row names
 row.names(df1)<-NULL
 
-  #name the third column"PRCP"
+#name the third column"PRCP"
 colnames(df1)[3]<-"PRCP"
 
-  # view first 5 rows of data in proper format
+# view first 5 rows of data in proper format
 head(df1)
 # YEAR MONTH PRCP
 # 1: 1981   JAN 1.37
@@ -95,7 +97,7 @@ head(df3)
 # combine vectors to data frame
 df1<-cbind(df1,df2,df3)
 head(df1)
-# YEAR MONTH PRCP  Tmax  Tmin
+# YEAR MONTH PRCP  TMAX  TMIN
 # 1: 1981   JAN 1.37 11.01 -0.51
 # 2: 1981   FEB 2.80 11.55 -0.62
 # 3: 1981   MAR 5.95 14.64  0.33
@@ -115,50 +117,62 @@ spei6<-spei(WBal,6)
 #display the values
 spei6
 
-# create a time series from the SPI data
-spie6ts <- as.data.table(spei6$fitted)
+# create a time series from the SPEI data
+spei6ts <- as.data.table(spei6$fitted)
 
 # merge the time series with the main data table
-df1$SPI6 <- spie6ts
+df1$SPEI6 <- spei6ts
+dfnew<-subset(df1, select=c(-PRCP, -PET, -TMAX, -TMIN))
+head(dfnew)
+# YEAR MONTH      SPEI6
+# 1: 1981   JAN         NA
+# 2: 1981   FEB         NA
+# 3: 1981   MAR         NA
+# 4: 1981   APR         NA
+# 5: 1981   MAY         NA
+# 6: 1981   JUN -0.7042684
 
-# create a date column using the year and month
-df1$DATE <- paste(as.character(df1$YEAR), as.character(df1$MONTH), as.character(01))
+#reshapedata
+dfnew<-dcast(df1,
+             YEAR~MONTH,
+             value.var=c("SPEI6"))
+head(dfnew)
 
-# set locale to English
-Sys.setlocale("LC_TIME", "English")
+#reset row names
+dfnew<-data.frame(dfnew)
+row.names(dfnew)<-dfnew$YEAR
+dfnew[,1]<-NULL
+dfnew
 
-# convert to datetime format
-df1$DATE <- as.Date(df1$DATE, format = "%Y %b %d")
+###create a Lattice Plot###
 
-###create a graphic###
-# # Make the window wider than taller
-# windows(width = 3.5, height = 3)
+# set plot resolution
+options(repr.plot.res = 200)
 
-# Save current graphical parameters
-#opar <- par(no.readonly = TRUE)
+# generate a matrix from the data
+m1 <- as.matrix(dfnew)
 
-# # Change the margins of the plot (the fourth is the right margin)
-# par(mar = c(5, 5, 4, 8))
+# view the matrix
+m1
 
-###create a graphic###
+#create spi color palette
+palette_spi <- palette(c("red", "orange", "yellow", "white", "#D2B4DE", "#8E44AD", "#4A235A"))
 
-plot.new()
+#create a theme
+myTheme <- modifyList(custom.theme(region=palette_spi),
+                      list(
+                        panel.background=list(col="black")))
 
-plot(df1$DATE, df1$SPI6, type = "l", xlab = "Year", ylab = "SPEI",main="Past Data (1981-2010) SPEI6")
-lines(df1$DATE, rep(-1, times = length(df1$YEAR)), col = "yellow")
-lines(df1$DATE, rep(-1.5, times = length(df1$YEAR)), col = "orange")
-lines(df1$DATE, rep(-2, times = length(df1$YEAR)), col = "red")
+#break color key
+breaks <- c(-3, -2, -1.5, -1, 1, 1.5, 2, 3)
 
-legend("topleft",
-       #inset = c(-0.45, 0), # You will need to fine-tune the first
-       # value depending on the windows size
-       legend = c("Moderately dry", "Very dry", "Extremely dry"),
-       col = c("yellow", "orange", "red"),
-       lty = c(1, 1, 1),
-       bg=rgb(1,0,0, alpha=0.15),
-       cex=0.7
-       # xpd = TRUE
-) # You need to specify this graphical parameter to
-# put the legend outside the plot
-# Back to the default graphical parameters
-#on.exit(par(opar))
+# plot the matrix
+levelplot(
+  m1,
+  par.settings=myTheme,
+  col.regions = palette_spi,
+  at = breaks,
+  xlab = "Year",
+  ylab = "Month",
+  main="Past data (1981-2010) SPEI6 "
+)
