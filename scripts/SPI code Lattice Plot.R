@@ -3,11 +3,11 @@
 # #import functions
 # source("functions/convert-units.R")
 
-# install packages
-install.packages("data.table")
-
 # load libraries
 library(data.table)
+library(SPEI)
+library(lattice)
+library(latticeExtra)
 
 #import data in data
 df <- read.table("./data/nasa(81-10).csv", quote = "\"", sep=";", header=T, dec=".")
@@ -54,22 +54,17 @@ head(df1)
 #if needed : convert kgm2s in mmday
 #kgm2s(df1$PRCP)
 
-#install package
-install.packages ("SPEI")
-#load package
-library(SPEI)
-
 #create a list
-spi6<-spi(df1$PRCP,6)
+spi12<-spi(df1$PRCP, 12)
 
 # #display the values
-spi6
+spi12
 
 # create a time series from the SPI data
-spi6ts <- as.data.table(spi6$fitted)
+spi12ts <- as.data.table(spi12$fitted)
 
 # merge the time series with the main data table
-df1$SPI6 <- spi6ts
+df1$SPI12 <- spi12ts
 dfnew<-subset(df1, select=c(-PRCP))
 head(dfnew)
 # YEAR MONTH      SPI6
@@ -83,22 +78,15 @@ head(dfnew)
 #reshapedata
 dfnew<-dcast(df1,
       YEAR~MONTH,
-      value.var=c("SPI6"))
+      value.var=c("SPI12"))
 head(dfnew)
-
+summary(dfnew)
 #reset row names
 dfnew<-data.frame(dfnew)
 row.names(dfnew)<-dfnew$YEAR
 dfnew[,1]<-NULL
-str(dfnew)
 
-###create a 3D graphic###
-
-#Plotting matrices using the "lattice" R package
-
-# import required libraries
-library(lattice)
-library(colorspace)
+###create a Lattice Plot###
 
 # set plot resolution
 options(repr.plot.res = 200)
@@ -109,28 +97,24 @@ m1 <- as.matrix(dfnew)
 # view the matrix
 m1
 
-# #create a theme
-# library(latticeExtra)
-# library(RColorBrewer)
-#
-# myth<-lattice.options(default.theme = standard.theme(color = FALSE))
-# sb <- trellis.par.get("strip.background")
-# sb[["col"]][1] <- "lightred"
-# myth2<-trellis.par.set("strip.background", sb)
-# #
-# # myTheme <- modifyList(custom.theme(region=brewer.pal(8, 'RdBu')),
-# #                       list(
-# #                         strip.background=list(col='blue'),
-# #                         panel.background=list(col='red')))
+#create spi color palette
+palette_spi <- palette(c("red", "orange", "yellow", "white", "#D2B4DE", "#8E44AD", "#4A235A"))
 
+#create a theme
+myTheme <- modifyList(custom.theme(region=palette_spi),
+                      list(
+                        panel.background=list(col="black")))
+
+#break color key
+breaks <- c(-4, -2, -1.5, -1, 1, 1.5, 2, 4)
 
 # plot the matrix
 levelplot(
-  m1, par.settings=myth2,
-  # col.regions = divergingx_hcl("PRGn", n = 12),
-  col.regions=heat.colors(100),
-  cuts = 7,
+  m1,
+  par.settings=myTheme,
+  col.regions = palette_spi,
+  at = breaks,
   xlab = "Year",
   ylab = "Month",
-  main="Past data (1981-2010) SPI6 "
+  main="Past data (1981-2010) SPI12"
 )
