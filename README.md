@@ -16,7 +16,7 @@ R -e "IRkernel::installspec()"
 
 Notebook | Link
 --- | ---
-Find closest EURO-CORDEX icell to study area | [nbviewer](https://nbviewer.org/github/ClimAg/climate-change-droughts/blob/main/docs/eurocordex-find-icell.ipynb)
+Find closest EURO-CORDEX grid cell to study area | [nbviewer](https://nbviewer.org/github/ClimAg/climate-change-droughts/blob/main/docs/eurocordex-find-icell.ipynb)
 SPI - historical - Cork Airport | [nbviewer](https://nbviewer.org/github/ClimAg/climate-change-droughts/blob/main/docs/eurocordex-process-spi-hist-ca.ipynb)
 SPI - future - Cork Airport | [nbviewer](https://nbviewer.org/github/ClimAg/climate-change-droughts/blob/main/docs/eurocordex-process-spi-future-ca.ipynb)
 SPEI - historical - Cork Airport | [nbviewer](https://nbviewer.org/github/ClimAg/climate-change-droughts/blob/main/docs/eurocordex-process-spei-hist-ca.ipynb)
