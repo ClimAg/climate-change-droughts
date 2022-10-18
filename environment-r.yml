@@ -1,0 +1,13 @@
+name: r-env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - r-base
+  - r-essentials
+  - r-rgdal
+  - r-sf
+  - r-geojsonio
+  - r-rgeos
+  - r-rastervis
+  - jupyterlab
