@@ -4,7 +4,7 @@ Climate Change and Droughts in Ireland - Impacts on Agricultural Production
 
 ## R Conda environment
 
-To run R code in a Jupyter Notebook, reate a Conda environment and install the Jupyter R kernel:
+To run R code in a Jupyter Notebook, create a Conda environment and install the Jupyter R kernel:
 
 ```sh
 conda env create --file environment-r.yml
